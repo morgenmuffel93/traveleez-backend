@@ -1,79 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const Phone = require('../models/phone');
+const Guide = require('../models/guide');
 
-router.get('/guides', (req, res, next) => {
-  
-  Guide.find({})
-    .then((phoneList) => {
-      res.status(200);
-      res.json(phoneList);
+router.get('/', (req, res, next) => {
+
+ Guide.find({})
+   .then((guideList) => {
+     res.status(200);
+     console.log("hello" + guideList)
+     res.json(guideList);
+   })
+   .catch(next)
+
+});
+
+router.post('/', (req, res, next) => {
+    const { title, date, time, description, location, expertise, duration } = req.body;
+   
+    const newGuide = new Guide({
+        title,
+        date,
+        time,
+        description,
+        location,
+        expertise,
+        duration
+    });
+   
+    newGuide.save()
+    .then((guide)=> {
+      res.status(200)
+      res.json({guide: newGuide})
     })
     .catch(next)
-
-});
-
-router.post('/guides', (req, res, next) => {
-  const { brand, model, specs, image } = req.body;
-
-  const newPhone = new Phone({
-    brand,
-    model,
-    specs: specs || [],
-    image,
-  });
-  
-  newPhone.save()
-  .then((phone)=> {
-    res.status(200)
-    res.json({phone: newPhone})
-  })
-  .catch(next)
-});
-
-router.get('/phones/:id', (req, res, next) => {
-  const { id } = req.params;
-
-  Phone.findById(id)
-    .then((phone) => {
-      res.status(200);
-      res.json(phone);
-    })
-    .catch(next)
-});
-
-router.put('/phones/:id', (req, res, next) => {
-  const { id } = req.params;
-  const { brand, model, specs, image } = req.body;
-  const phoneToUpdate = {
-    brand,
-    model,
-    specs,
-    image,
-  };
-
-  Phone.findByIdAndUpdate(id, phoneToUpdate)
-    .then((phone) => {
-      res.status(200);
-      res.json({ 
-        message: "updated",
-        phone: phone });
-    })
-    .catch(next)
-});
-
-router.delete('/phones/:id', (req, res, next) => {
-  const { id } = req.params;
-
-  Phone.findByIdAndDelete(id)
-    .then((phone) => {
-      res.status(200);
-      res.json({ 
-        message: "deleted",
-        phone: phone });
-    })
-    .catch(next)
-
-});
+   });
 
 module.exports = router;
