@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
 
 });
 
-router.post('/', (req, res, next) => {
+router.post('/create', (req, res, next) => {
     const { title, date, time, description, location, expertise, duration } = req.body;
    
     const newGuide = new Guide({
