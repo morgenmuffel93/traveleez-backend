@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/', (req, res, next) => {
-  const { title, date, time, description, location, expertise, duration } = req.body;
+  const { title, date, time, description, location, expertise, duration} = req.body;
 
   const { _id } = req.session.currentUser;
 
@@ -27,9 +27,11 @@ router.post('/', (req, res, next) => {
     description,
     location,
     expertise,
-    duration
+    duration,
+    owner: _id,
   });
 
+  console.log(newGuide)
   const updateUserPromise = User.findByIdAndUpdate(_id, { $push: { guides: newGuide._id } });
   const saveGuidePromise = newGuide.save();
 
@@ -45,7 +47,6 @@ router.post('/', (req, res, next) => {
 //----##### update guides ####--// 
 
 router.get('/edit/:id', (req, res, next) => {
-  console.log("im here")
   const { id } = req.params;
 
   Guide.findById(id)
@@ -57,11 +58,9 @@ router.get('/edit/:id', (req, res, next) => {
 });
 
 router.put('/edit/:id', (req, res, next) => {
-  console.log("im here")
 
   const { id } = req.params;
   const { title, date, time, description, location, expertise, duration } = req.body;
-  console.log('update guide body', req.body)
   const guideToUpdate = {
     title,
     date,
@@ -99,4 +98,17 @@ router.delete('/delete/:id', (req, res, next) => {
     .catch(next)
 
 });
+
+router.get('/:id', (req, res, next) => {
+  const guideId = req.params.id;
+  console.log(guideId)
+  Guide.findById({ _id: guideId })
+    .populate('owner')
+    .then((guide) => {
+      res.json(guide);
+    })
+    .catch(next);
+});
+
+
 module.exports = router;

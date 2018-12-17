@@ -14,6 +14,16 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/:id', (req, res, next) => {
+  const userId = req.params.id;
+  User.findById(userId)
+    .populate('guides')
+    .then((user) => {
+      res.json({ user });
+    })
+    .catch(next);
+});
+
 router.put('/', (req, res, next) => {
 
   const { _id } = req.session.currentUser;

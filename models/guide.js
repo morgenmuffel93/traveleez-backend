@@ -10,10 +10,9 @@ const guideSchema = new Schema({
   location: String,
   expertise: String,
   duration: Number,
-}, {
-  userId: {
-    type: ObjectID,
-    ref: 'User'
+  owner: {
+  type: ObjectID,
+  ref: 'User'
   }
 });
 
