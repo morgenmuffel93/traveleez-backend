@@ -12,8 +12,11 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'Guide'
   }],
-  savedForLater: Array,
-}, {
+  savedForLater: [{
+    type: ObjectId,
+    ref: 'Guide'
+  }]
+  }, {
   timestamps: {
     createdAt: 'created_at',
     updatedAt: 'updated_at'

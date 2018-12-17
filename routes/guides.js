@@ -101,14 +101,18 @@ router.delete('/delete/:id', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   const guideId = req.params.id;
-  console.log(guideId)
+
   Guide.findById({ _id: guideId })
     .populate('owner')
     .then((guide) => {
-      res.json(guide);
+      const { _id } = req.session.currentUser;
+      User.findById(_id)
+        .populate('trips')
+        .then((user) => {
+          res.json({ guide, user });
+        });
     })
     .catch(next);
 });
-
 
 module.exports = router;
