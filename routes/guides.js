@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Guide = require('../models/guide');
 const User = require('../models/user');
+const guideMiddleware = require('../helpers/guidesMiddleware');
 
 router.get('/', (req, res, next) => {
   //----##### find all guides ####--// 

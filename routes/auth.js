@@ -10,7 +10,7 @@ router.get('/me', (req, res, next) => {
   if (req.session.currentUser) {
     res.json(req.session.currentUser);
   } else {
-    res.status(404).json({
+    res.json({
       error: 'not-found'
     });
   }
@@ -26,8 +26,9 @@ router.post('/login', (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
+    console.log('got here')
     return res.status(422).json({
-      error: 'validation'
+      error: 'Both fields are required'
     });
   }
 
@@ -37,7 +38,7 @@ router.post('/login', (req, res, next) => {
     .then((user) => {
       if (!user) {
         return res.status(404).json({
-          error: 'not-found'
+          error: 'Incorrect user or password'
         });
       }
       // TODO async bcrypt
@@ -46,7 +47,7 @@ router.post('/login', (req, res, next) => {
         return res.status(200).json(user);
       }
       return res.status(404).json({
-        error: 'not-found'
+        error: 'Incorrect user or password'
       });
     })
     .catch(next);
@@ -61,7 +62,7 @@ router.post('/signup', (req, res, next) => {
 
   if (!username || !password) {
     return res.status(422).json({
-      error: 'empty'
+      error: 'Both fields are required'
     });
   }
 
@@ -71,7 +72,7 @@ router.post('/signup', (req, res, next) => {
     .then((userExists) => {
       if (userExists) {
         return res.status(422).json({
-          error: 'username-not-unique'
+          error: 'Username already exists'
         });
       }
 
