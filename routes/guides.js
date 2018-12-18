@@ -47,7 +47,7 @@ router.post('/', (req, res, next) => {
 
 //----##### update guides ####--// 
 
-router.get('/edit/:id', (req, res, next) => {
+router.get('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
   const { id } = req.params;
 
   Guide.findById(id)
@@ -58,7 +58,7 @@ router.get('/edit/:id', (req, res, next) => {
     .catch(next)
 });
 
-router.put('/edit/:id', (req, res, next) => {
+router.put('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
 
   const { id } = req.params;
   const { title, date, time, description, location, expertise, duration } = req.body;
@@ -85,7 +85,7 @@ router.put('/edit/:id', (req, res, next) => {
 
 //----##### delete guides ####--// 
 
-router.delete('/delete/:id', (req, res, next) => {
+router.delete('/delete/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
   const { id } = req.params;
 
   Guide.findByIdAndDelete(id)
