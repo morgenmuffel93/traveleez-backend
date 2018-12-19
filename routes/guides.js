@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/', (req, res, next) => {
-  const { title, date, time, description, location, expertise, duration} = req.body;
+  const { title, date, time, description, location} = req.body;
 
   const { _id } = req.session.currentUser;
 
@@ -27,9 +27,6 @@ router.post('/', (req, res, next) => {
     time,
     description,
     location,
-    expertise,
-    duration,
-    owner: _id,
   });
 
   console.log(newGuide)
@@ -106,9 +103,7 @@ router.get('/:id', (req, res, next) => {
   Guide.findById({ _id: guideId })
     .populate('owner')
     .then((guide) => {
-      const { _id } = req.session.currentUser;
-      User.findById(_id)
-        .populate('trips')
+      User.find({ guides: guide._id})
         .then((user) => {
           res.json({ guide, user });
         });

@@ -8,12 +8,6 @@ const guideSchema = new Schema({
   time: String,
   description: String,
   location: String,
-  expertise: String,
-  duration: Number,
-  owner: {
-  type: ObjectID,
-  ref: 'User'
-  }
 });
 
 const Guide = mongoose.model('Guide', guideSchema);
