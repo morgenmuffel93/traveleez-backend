@@ -10,7 +10,7 @@ router.get('/me', (req, res, next) => {
   if (req.session.currentUser) {
     res.json(req.session.currentUser);
   } else {
-    res.json({
+    res.status(404).json({
       error: 'not-found'
     });
   }
@@ -86,7 +86,7 @@ router.post('/signup', (req, res, next) => {
 
       return newUser.save().then(() => {
         req.session.currentUser = newUser;
-        res.json(newUser);
+        res.status(200).json(newUser);
       });
     })
     .catch(next);

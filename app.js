@@ -54,11 +54,6 @@ app.use(session({
   }
 }));
 
-app.use((req, res, next) => {
-  app.locals.currentUser = req.session.currentUser;
-  next();
-});
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
