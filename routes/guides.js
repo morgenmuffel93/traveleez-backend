@@ -3,8 +3,9 @@ const router = express.Router();
 const Guide = require('../models/guide');
 const User = require('../models/user');
 const guideMiddleware = require('../helpers/guidesMiddleware');
+const { isLoggedIn } = require('../helpers/middlewares');
 
-router.get('/', (req, res, next) => {
+router.get('/', isLoggedIn(), (req, res, next) => {
   //----##### find all guides ####--// 
   Guide.find({})
     .then((guideList) => {
@@ -16,7 +17,7 @@ router.get('/', (req, res, next) => {
 });
 
 
-router.post('/', (req, res, next) => {
+router.post('/', isLoggedIn(), (req, res, next) => {
   const { title, date, time, description, location} = req.body;
 
   const { _id } = req.session.currentUser;
@@ -44,7 +45,7 @@ router.post('/', (req, res, next) => {
 
 //----##### update guides ####--// 
 
-router.get('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
+router.get('/edit/:id', isLoggedIn(), guideMiddleware.checkGuideUser, (req, res, next) => {
   const { id } = req.params;
 
   Guide.findById(id)
@@ -55,7 +56,7 @@ router.get('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
     .catch(next)
 });
 
-router.put('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
+router.put('/edit/:id', isLoggedIn(), guideMiddleware.checkGuideUser, (req, res, next) => {
 
   const { id } = req.params;
   const { title, date, time, description, location, expertise, duration } = req.body;
@@ -82,7 +83,7 @@ router.put('/edit/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
 
 //----##### delete guides ####--// 
 
-router.delete('/delete/:id', guideMiddleware.checkGuideUser, (req, res, next) => {
+router.delete('/delete/:id', isLoggedIn(), guideMiddleware.checkGuideUser, (req, res, next) => {
   const { id } = req.params;
 
   Guide.findByIdAndDelete(id)
@@ -97,7 +98,7 @@ router.delete('/delete/:id', guideMiddleware.checkGuideUser, (req, res, next) =>
 
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', isLoggedIn(), (req, res, next) => {
   const guideId = req.params.id;
 
   Guide.findById({ _id: guideId })

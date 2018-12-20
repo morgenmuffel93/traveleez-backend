@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user')
+const { isLoggedIn } = require('../helpers/middlewares');
 
-
-router.get('/', (req, res, next) => {
+router.get('/', isLoggedIn(), (req, res, next) => {
   console.log('im hereee')
   const { _id } = req.session.currentUser;
   User.findById(_id)
@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', isLoggedIn(), (req, res, next) => {
   const userId = req.params.id;
   User.findById(userId)
     .populate('guides')
@@ -24,7 +24,7 @@ router.get('/:id', (req, res, next) => {
     .catch(next);
 });
 
-router.put('/', (req, res, next) => {
+router.put('/', isLoggedIn(), (req, res, next) => {
 
   const { _id } = req.session.currentUser;
   console.log(req.body)

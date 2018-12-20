@@ -1,18 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const { isLoggedIn } = require('../helpers/middlewares');
 
-// router.get('/', authMiddleware.requireUser, (req, res, next) => {
-//   const { _id } = req.session.currentUser;
-//   User.findById(_id)
-//     .populate('savedForLater')
-//     .then((user) => {
-//       res.render('favourites/list-favourites', { user });
-//     })
-//     .catch(next);
-// });
-
-router.post('/add-delete/:guideId', (req, res, next) => {
+router.post('/add-delete/:guideId', isLoggedIn(), (req, res, next) => {
   const userId = req.session.currentUser;
   const guideId = req.params.guideId;
 
@@ -24,7 +15,7 @@ router.post('/add-delete/:guideId', (req, res, next) => {
           .then(() => {
             return res.json({ status: 'added' });
           });
-          
+
       } else {
         User.findByIdAndUpdate(userId, { $pull: { savedForLater: guideId } })
           .then(() => {
